@@ -33,7 +33,7 @@ import 'modal-window/modal-window.js';
 
 ```js preview-story
 export const Simple = () => html`
-  <modal-window></modal-window>
+  <modal-window open>content goes here!</modal-window>
 `;
 ```
 
@@ -42,7 +42,19 @@ export const Simple = () => html`
 ###### Custom Title
 
 ```js preview-story
+
+const open = () => {
+  const modal = document.getElementById('custom-modal')
+  modal.open = true
+}
+
+const close = () => {
+  const modal = document.getElementById('custom-modal')
+  modal.open = false
+}
+
 export const CustomTitle = () => html`
-  <modal-window title="Hello World"></modal-window>
+  <button @click=${open}>open modal-window</button>
+  <modal-window @overlay-click=${close} id="custom-modal"></modal-window>
 `;
 ```

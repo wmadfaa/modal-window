@@ -1,26 +1,38 @@
-import { html, css, LitElement, property } from 'lit-element';
+import { html, LitElement, property } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map';
+
+import VARIABLES from './styles/variables.styles';
+import MAIN_STYLES from './styles/main.styles';
+
+import FADE_IN_AND_SCALE from './styles/effects/fade-in-and-scale.styles';
 
 export class ModalWindow extends LitElement {
-  static styles =css`
-    :host {
-      display: block;
-      padding: 25px;
-      color: var(--modal-window-text-color, #000);
-    }
-  `;
+  static get styles() {
+    return [VARIABLES, MAIN_STYLES, FADE_IN_AND_SCALE];
+  }
 
-  @property({type: String}) title = 'Hey there';
+  @property({ type: Boolean }) open = false;
 
-  @property({type: Number}) counter = 5;
-
-  __increment() {
-    this.counter += 1;
+  __handleOnOverlayClicked() {
+    this.dispatchEvent(
+      new CustomEvent('overlay-click', { detail: { open: this.open } })
+    );
   }
 
   render() {
     return html`
-      <h2>${this.title} Nr. ${this.counter}!</h2>
-      <button @click=${this.__increment}>increment</button>
+      <div
+        class=${classMap({
+          modal: true,
+          'fade-in-and-scale-effect': true,
+          show: this.open,
+        })}
+      >
+        <div class="content">
+          <slot>default content</slot>
+        </div>
+      </div>
+      <div class="overlay" @click=${this.__handleOnOverlayClicked}></div>
     `;
   }
 }
